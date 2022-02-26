@@ -41,7 +41,11 @@ export default function AllTiles() {
   const [allTiles, setAllTiles] = React.useState([]);
   React.useEffect(() => {
     axios
-      .get("http://localhost:9000/all-tiles")
+      .get("http://localhost:9000/all-tiles", {
+        headers: {
+          Authorization: "Bearer " + localStorage.getItem("token"),
+        },
+      })
       .then((res) => {
         setAllTiles(res.data.data);
       })

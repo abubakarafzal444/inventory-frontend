@@ -1,12 +1,10 @@
 import * as React from "react";
 import axios from "axios";
-import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import ReactFileReader from "react-file-reader";
 import {
+  Box,
   Button,
   FormControl,
-  IconButton,
   Input,
   InputLabel,
   MenuItem,
@@ -29,6 +27,7 @@ export default function UploadTile() {
     TileType: "",
     PcsInBox: "",
     Company: "",
+    image: "",
   });
   const clearInput = () => {
     setNewTile({
@@ -44,6 +43,7 @@ export default function UploadTile() {
       TileType: "",
       PcsInBox: "",
       Company: "",
+      image: "",
     });
   };
   const dataHandler = (event) => {
@@ -52,28 +52,34 @@ export default function UploadTile() {
     setNewTile(temp);
   };
 
-  const handleFiles = (files) => setUploadImage(files);
-
-  const formData = new FormData();
-  formData.append("Name", newTile.Name);
-  formData.append("ItemCode", newTile.ItemCode);
-  formData.append("Description", newTile.Description);
-  formData.append("Quantity", newTile.Quantity);
-  formData.append("Price", newTile.Price);
-  formData.append("Note", newTile.Note);
-  formData.append("Size", newTile.Size);
-  formData.append("Shade", newTile.Shade);
-  formData.append("Finishing", newTile.Finishing);
-  formData.append("TileType", newTile.TileType);
-  formData.append("PcsInBox", newTile.PcsInBox);
-  formData.append("Company", newTile.Company);
-  formData.append("Image", uploadImage);
+  const handleFiles = (event) => {
+    let temp = { ...newTile };
+    temp.image = event.target.files[0];
+    setNewTile(temp);
+  };
 
   const submitHandler = (e) => {
     e.preventDefault();
-    console.log(newTile);
+    const formData = new FormData();
+    formData.append("Name", newTile.Name);
+    formData.append("ItemCode", newTile.ItemCode);
+    formData.append("Description", newTile.Description);
+    formData.append("Quantity", newTile.Quantity);
+    formData.append("Price", newTile.Price);
+    formData.append("Note", newTile.Note);
+    formData.append("Size", newTile.Size);
+    formData.append("Shade", newTile.Shade);
+    formData.append("Finishing", newTile.Finishing);
+    formData.append("TileType", newTile.TileType);
+    formData.append("PcsInBox", newTile.PcsInBox);
+    formData.append("Company", newTile.Company);
+    formData.append("image", newTile.image);
     axios
-      .post("http://localhost:9000/add-tile", formData)
+      .post("http://localhost:9000/add-tile", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((res) => {
         console.log("Data sent", res);
         clearInput();
@@ -83,6 +89,7 @@ export default function UploadTile() {
   return (
     <Box
       component="form"
+      encType="multipart/form-data"
       sx={{
         "& .MuiTextField-root": { m: 1, width: "25ch" },
       }}
@@ -100,7 +107,7 @@ export default function UploadTile() {
           value={newTile.Name}
           name="Name"
           size="small"
-          required
+          // required
         />
         <TextField
           id="outlined-basic"
@@ -234,35 +241,43 @@ export default function UploadTile() {
           name="Company"
           size="small"
           required
+          onClick={() => {
+            console.log(URL.createObjectURL(newTile.image));
+          }}
         />
-        <ReactFileReader
-          fileTypes={[".png", ".jpg", ".jpeg"]}
-          base64={false}
-          handleFiles={handleFiles}
-        >
-          <Button size="small" variant="primary">
-            Upload Tile Image
+
+        <label htmlFor="icon-button-file">
+          <Button variant="contained" component="span">
+            Upload Image
           </Button>
-        </ReactFileReader>
+
+          <Input
+            accept="image/*"
+            id="icon-button-file"
+            type="file"
+            name="image"
+            style={{ display: "none" }}
+            onChange={handleFiles}
+          />
+        </label>
 
         <Button variant="contained" type="submit">
           upload
         </Button>
         <div>
-          <ReactFileReader
-            fileTypes={[".png", ".jpg", ".jpeg"]}
-            base64={true}
-            handleFiles={handleFiles}
-          >
-            {uploadImage ? (
-              <img src={uploadImage} alt="tile" width="200px" height="200px" />
-            ) : (
-              <Skeleton
-                variant="rectangular"
-                style={{ width: "200px", height: "200px" }}
-              ></Skeleton>
-            )}
-          </ReactFileReader>
+          {newTile.image ? (
+            <img
+              src={URL.createObjectURL(newTile.image)}
+              alt="tile"
+              width="200px"
+              height="200px"
+            />
+          ) : (
+            <Skeleton
+              variant="rectangular"
+              style={{ width: "200px", height: "200px" }}
+            ></Skeleton>
+          )}
         </div>
       </div>
     </Box>
