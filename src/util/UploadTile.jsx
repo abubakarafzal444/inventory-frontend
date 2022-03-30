@@ -13,7 +13,6 @@ import {
 } from "@mui/material";
 
 export default function UploadTile() {
-  const [uploadImage, setUploadImage] = React.useState("");
   const [newTile, setNewTile] = React.useState({
     Name: "",
     ItemCode: "",

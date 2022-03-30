@@ -2,7 +2,7 @@ import * as React from "react";
 import axios from "axios";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
-import { Button } from "@mui/material";
+import { Button, Input, Skeleton } from "@mui/material";
 
 export default function UploadGrout() {
   const [newGrout, setNewGrout] = React.useState({
@@ -36,14 +36,35 @@ export default function UploadGrout() {
   };
   const submitHandler = (e) => {
     e.preventDefault();
+    const formData = new FormData();
+    formData.append("Name", newGrout.Name);
+    formData.append("ItemCode", newGrout.ItemCode);
+    formData.append("Description", newGrout.Description);
+    formData.append("Quantity", newGrout.Quantity);
+    formData.append("Price", newGrout.Price);
+    formData.append("Note", newGrout.Note);
+    formData.append("Weight", newGrout.Weight);
+    formData.append("Color", newGrout.Color);
+    formData.append("Company", newGrout.Company);
+    formData.append("image", newGrout.image);
+
     console.log(newGrout);
     axios
-      .post("http://localhost:9000/add-grout", newGrout)
+      .post("http://localhost:9000/add-grout", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
       .then((res) => {
         console.log("Data sent", res);
         clearInput();
       })
       .catch((err) => alert("There was an error"));
+  };
+  const handleFiles = (event) => {
+    let temp = { ...newGrout };
+    temp.image = event.target.files[0];
+    setNewGrout(temp);
   };
   return (
     <Box
@@ -57,10 +78,10 @@ export default function UploadGrout() {
       <div>
         <TextField
           id="outlined-basic"
-          label="Tile Name"
+          label="Grout Name"
           variant="outlined"
           type="text"
-          placeholder="Tile Name"
+          placeholder="Grout Name"
           onChange={dataHandler}
           value={newGrout.Name}
           name="Name"
@@ -162,10 +183,38 @@ export default function UploadGrout() {
           size="small"
           required
         />
+        <label htmlFor="icon-button-file">
+          <Button variant="contained" component="span">
+            Upload Image
+          </Button>
 
+          <Input
+            accept="image/*"
+            id="icon-button-file"
+            type="file"
+            name="image"
+            style={{ display: "none" }}
+            onChange={handleFiles}
+          />
+        </label>
         <Button variant="primary" type="submit">
           upload
         </Button>
+        <div>
+          {newGrout.image ? (
+            <img
+              src={URL.createObjectURL(newGrout.image)}
+              alt="tile"
+              width="200px"
+              height="200px"
+            />
+          ) : (
+            <Skeleton
+              variant="rectangular"
+              style={{ width: "200px", height: "200px" }}
+            ></Skeleton>
+          )}
+        </div>
       </div>
     </Box>
   );

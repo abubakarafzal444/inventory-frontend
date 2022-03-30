@@ -7,6 +7,9 @@ import Temp from "./Temp";
 import AddUser from "./util/AddUser";
 import Login from "./util/Login";
 import TileDetails from "./util/TileDetails";
+import LandingPage from "./Pages/LandingPage";
+import AllGrouts from "./util/DisplayAllGrouts";
+import GroutDetails from "./util/GroutDetails";
 //////////////////////////////////
 //  run inside use effect
 //     const token = localStorage.getItem("token");
@@ -37,10 +40,13 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<LandingPage />} />
           <Route path="/add-user" element={<AddUser />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<AllTiles />} />
+          <Route path="/all-tiles" element={<AllTiles />} />
+          <Route path="/all-grouts" element={<AllGrouts />} />
           <Route path="/tile-detail/:ItemCode" element={<TileDetails />} />
+          <Route path="/grout-detail/:ItemCode" element={<GroutDetails />} />
           <Route path="/add-tile" element={<UploadTile />} />
           <Route path="/add-grout" element={<UploadGrout />} />
           <Route path="/temp" element={<Temp />} />
