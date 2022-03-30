@@ -7,6 +7,8 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import axios from "axios";
+import { Link } from "react-router-dom";
+import { Button } from "@mui/material";
 
 export default function AllTiles() {
   const createData = (
@@ -89,6 +91,7 @@ export default function AllTiles() {
             <TableCell align="right">Tile Type</TableCell>
             <TableCell align="right">pcs in box</TableCell>
             <TableCell align="right">Company</TableCell>
+            <TableCell align="right">Details</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -111,6 +114,11 @@ export default function AllTiles() {
               <TableCell align="right">{row.TileType}</TableCell>
               <TableCell align="right">{row.PcsInBox}</TableCell>
               <TableCell align="right">{row.Company}</TableCell>
+              <TableCell align="right">
+                <Link to={`/tile-detail/${row.ItemCode}`}>
+                  <Button>view details</Button>
+                </Link>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

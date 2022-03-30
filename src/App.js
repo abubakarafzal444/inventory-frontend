@@ -6,6 +6,7 @@ import AllTiles from "./util/DisplayAllTies";
 import Temp from "./Temp";
 import AddUser from "./util/AddUser";
 import Login from "./util/Login";
+import TileDetails from "./util/TileDetails";
 //////////////////////////////////
 //  run inside use effect
 //     const token = localStorage.getItem("token");
@@ -39,6 +40,7 @@ function App() {
           <Route path="/add-user" element={<AddUser />} />
           <Route path="/login" element={<Login />} />
           <Route path="/" element={<AllTiles />} />
+          <Route path="/tile-detail/:ItemCode" element={<TileDetails />} />
           <Route path="/add-tile" element={<UploadTile />} />
           <Route path="/add-grout" element={<UploadGrout />} />
           <Route path="/temp" element={<Temp />} />
